@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<script src="/socket.io/socket.io.js"></script>
+
+	<style>
+		.text {
+			font-family: 'Roboto', sans-serif;
+			font-weight: 700;
+			font-size: 80px;
+			animation: opacityToggle 3s infinite alternate;
+			display: none;
+
+			color: #fff;
+			text-shadow:
+				2px 2px 0 #000,
+				-2px 2px 0 #000,
+				-2px -2px 0 #000,
+				2px -2px 0 #000;
+
+			padding-left: 10px;
+		}
+
+		@keyframes opacityToggle {
+			0% {
+				opacity: 0.1;
+			}
+
+			100% {
+				opacity: 0.5;
+			}
+		}
+	</style>
+</head>
+
+<body>
+	<span class="text">Song Request Playing</span>
+
+	<script>
+		async function fetchCurrentSong() {
+			try {
+				const result = await fetch(`http://localhost:3000/api/queue/current`, {
+					headers: {
+						Authorization: `Bearer Memes`
+					}
+				});
+
+				const {
+					data
+				} = await result.json();
+
+				return data;
+			}
+			catch (_) {
+				return false;
+			}
+		}
+
+		async function updateStatus() {
+			const songData = await fetchCurrentSong();
+
+			const text = document.querySelector('.text');
+			if (songData?.playing) {
+				text.style.display = 'block';
+			}
+			else {
+				text.style.display = 'none';
+			}
+
+			setTimeout(updateStatus, 1000);
+		}
+
+		updateStatus();
+	</script>
+</body>
+
+</html>
