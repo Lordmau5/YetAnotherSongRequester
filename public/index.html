@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<script src="/socket.io/socket.io.js"></script>
+</head>
+
+<body>
+	<audio class="audio" controls></audio>
+
+	<script>
+		// eslint-disable-next-line no-undef
+		const socket = io();
+		const audio = document.querySelector('.audio');
+
+		// on audio playback end send event to server
+		audio.addEventListener('ended', () => {
+			socket.emit('song_ended');
+		});
+
+		socket.on('current_song', songData => {
+			console.log('Starting playback', songData);
+			startPlayback(songData);
+		});
+
+		socket.on('get_status', () => {
+			socket.emit('get_status', {
+				playing: !audio.paused,
+				time: audio.currentTime,
+				volume: audio.volume
+			});
+		});
+
+		socket.on('play', () => {
+			console.log('Playing');
+			audio.play();
+		});
+
+		socket.on('pause', () => {
+			console.log('Pausing');
+			audio.pause();
+		});
+
+		socket.on('mute', () => {
+			console.log('Muting');
+			audio.muted = true;
+		});
+
+		socket.on('unmute', () => {
+			console.log('Unmuting');
+			audio.muted = false;
+		});
+
+		async function startPlayback(songData) {
+			audio.src = '';
+
+			if (!songData?.streamURL)
+				return;
+
+			audio.src = songData.streamURL;
+			audio.volume = 1.0;
+			audio.play();
+		}
+	</script>
+</body>
+
+</html>

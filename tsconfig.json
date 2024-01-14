@@ -1,0 +1,23 @@
+{
+	"compilerOptions": {
+		"sourceMap": true,
+		"declaration": true,
+		"esModuleInterop": true,
+		"moduleResolution": "Node",
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
+		"typeRoots": [
+			"node_modules/@types"
+		],
+		"skipLibCheck": true,
+		"allowSyntheticDefaultImports": true,
+		"allowImportingTsExtensions": true,
+		"noEmit": true,
+		"baseUrl": "./",
+		"paths": {
+			"~/*": [
+				"src/*"
+			]
+		},
+	}
+}
