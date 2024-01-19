@@ -1,5 +1,7 @@
 import 'dotenv/config';
 
+// TODO: Save/Load config?
+
 interface IConfig {
 	CHANNEL: string;
 	BOT_NAME: string;

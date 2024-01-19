@@ -34,6 +34,9 @@ class TwitchHandler extends AbstractHandler {
 	}
 
 	getUserTypeFromBadges(badges: tmi.Badges): UserRequestType {
+		if (!badges)
+			return 'viewer';
+
 		if (badges.broadcaster === '1')
 			return 'broadcaster';
 		if (badges.vip === '1')
@@ -48,8 +51,8 @@ class TwitchHandler extends AbstractHandler {
 
 	// TODO: Add commands from StreamElements Media Request (!song, !wrongsong, !next, !when, etc.)
 
-	async respondWithCurrentSong(channel: string, username: string) {
-		const currentSong = await SongManager.getFirst();
+	async respondWithCurrentSong(username: string) {
+		const currentSong = SongManager.first;
 		if (!currentSong) {
 			await this.sendMessage(`@${ username } There is no song currently playing.`);
 
@@ -64,7 +67,7 @@ class TwitchHandler extends AbstractHandler {
 			return;
 
 		if (message === '!song') {
-			await this.respondWithCurrentSong(channel, tags.username);
+			await this.respondWithCurrentSong(tags.username);
 
 			return;
 		}

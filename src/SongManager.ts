@@ -61,7 +61,7 @@ class SongRequestManager {
 		await this.db.write();
 	}
 
-	async add(songRequest: SongRequest) {
+	add(songRequest: SongRequest) {
 		if (!songRequest.url.length || !songRequest.title.length) {
 			console.error('Invalid song request:', songRequest);
 
@@ -70,20 +70,27 @@ class SongRequestManager {
 
 		this.songRequests.push(songRequest);
 
-		await this.save();
+		this.save();
 	}
 
 	getAll(): SongRequest[] {
 		return this.songRequests;
 	}
 
-	async getFirst(with_stream_url: boolean = false): Promise<SongRequest | null> {
+	get first(): SongRequest | null {
 		const songRequests = this.getAll();
 		if (!songRequests.length) {
 			return null;
 		}
 
-		const song = songRequests[0];
+		return songRequests[0];
+	}
+
+	async getFirst(with_stream_url: boolean = false): Promise<SongRequest | null> {
+		const song = this.first;
+		if (!song) {
+			return null;
+		}
 
 		return {
 			...song,
